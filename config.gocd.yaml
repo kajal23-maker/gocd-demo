@@ -1,0 +1,64 @@
+# Config repo: config.gocd.yaml
+format_version: 10
+pipelines:
+  flask-dev:
+    group: flask-application
+    materials:
+      git:
+        git: https://github.com/kajal23-maker/gocd-demo.git
+        branch: development
+        auto_update: true
+    stages:
+      - build:
+          jobs:
+            setup:
+              tasks:
+                - exec:
+                    command: pip
+                    arguments:
+                      - install
+                      - -r
+                      - requirements.txt
+      - test:
+          jobs:
+            unit-tests:
+              tasks:
+                - exec:
+                    command: python
+                    arguments:
+                      - -m
+                      - pytest
+      - deploy-dev:
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: python
+                    arguments:
+                      - app.py
+                    run_if: passed
+
+  flask-prod:
+    group: flask-application
+    materials:
+      pipeline:
+        pipeline: flask-dev
+        stage: deploy-dev
+      git:
+        git: https://github.com/kajal23-maker/gocd-demo.git
+        branch: main
+        auto_update: false
+    stages:
+      - deploy-prod:
+          approval: manual
+          jobs:
+            deploy:
+              tasks:
+                - exec:
+                    command: python
+                    arguments:
+                      - app.py
+                    run_if: passed
+                    environment_variables:
+                      FLASK_ENV: production
+                      FLASK_PORT: "3000"
