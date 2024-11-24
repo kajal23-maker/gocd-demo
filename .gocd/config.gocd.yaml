@@ -34,9 +34,7 @@ pipelines:
             deploy:
               tasks:
                 - exec:
-                    command: python
-                    arguments:
-                      - app.py
+                    command: ./build
                     run_if: passed
 
   flask-prod:
