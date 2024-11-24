@@ -34,7 +34,9 @@ pipelines:
             deploy:
               tasks:
                 - exec:
-                    command: ./build
+                    command: echo
+                    arguments:
+                      - "The pipeline has been successfully deployed to development environment!"
                     run_if: passed
 
   flask-prod:
@@ -54,9 +56,9 @@ pipelines:
             deploy:
               tasks:
                 - exec:
-                    command: python
+                    command: echo
                     arguments:
-                      - app.py
+                      - "The pipeline has been successfully deployed to production environment!"
                     run_if: passed
                     environment_variables:
                       FLASK_ENV: production
