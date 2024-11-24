@@ -27,7 +27,8 @@ pipelines:
                     command: python
                     arguments:
                       - -m
-                      - pytest
+                      - unittest
+                      - test_app.py
       - deploy-dev:
           jobs:
             deploy:
